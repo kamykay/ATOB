@@ -38,6 +38,8 @@ public class Player : MonoBehaviour
     public Vector2 wallJumpOff;
     public Vector2 wallLeap;
 
+    public Vector2 testVector;
+
     //[Header("Player Initial Settings")]
     //public float distanceToCheckpoint = 3;
     //public Transform checkpointContainer;
