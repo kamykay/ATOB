@@ -10,7 +10,13 @@ public class Controller2D : RaycastController
     private float maxDescendAngle = 75;
 
     [HideInInspector]
-    public bool playerDeath;
+    private bool playerDeath;
+
+    public bool PlayerDeath 
+    {
+        get { return playerDeath; } 
+        set { playerDeath = value; } 
+    }
 
     public CollisionInfo collisions;
 

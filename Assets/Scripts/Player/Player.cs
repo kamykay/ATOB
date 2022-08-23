@@ -31,8 +31,10 @@ public class Player : MonoBehaviour
     private Vector2 velocity;
 
     [Header("Wall Jump Settings")]
-    public float wallSlideSpeedMax = 3;
-    public float wallStickTime = 0.25f;
+    [SerializeField]
+    private float wallSlideSpeedMax = 3;
+    [SerializeField]
+    private float wallStickTime = 0.25f;
     private float timeToWallUnstick;
     public Vector2 wallJumpClimb;
     public Vector2 wallJumpOff;
@@ -40,22 +42,19 @@ public class Player : MonoBehaviour
 
     public Vector2 testVector;
 
-    //[Header("Player Initial Settings")]
-    //public float distanceToCheckpoint = 3;
-    //public Transform checkpointContainer;
-    //public Vector2 initialPosition = new Vector2();
-    //[HideInInspector]
-    //public Vector2 playerCheckpoint;
-    //[HideInInspector]
-    //public List<GameObject> checkpoints;
-
-    //[Header("Light Settings")]
-    //[SerializeField]
-    //private HardLight2D playerLight;
-
     private Vector2 directionalInput;
     private bool wallSliding;
     private int wallDirX;
+
+    [Header("Initial Settings")]
+    [SerializeField]
+    private Vector2 initialPosition;
+
+    public Vector2 InitialPosition
+    {
+        get { return initialPosition; }
+        set { initialPosition = value; }
+    }
 
     //[Header("NPC Dialogue")]
     ////public List<NPC> npcList = new List<NPC>();
@@ -63,21 +62,13 @@ public class Player : MonoBehaviour
     //private float distanceToNpc = 3;
     //private float distance;
 
-    //private Animator anim;
-
     Controller2D controller;
     //GuiManager guiManager;
 
     //DialogueManager dialogueManager;
 
-    // Debug
-    //public Text debugText;
-
     private void Start()
     {
-        // Player initial position
-        //transform.position = initialPosition;
-
         // Set initial player movement speed
         moveSpeed = initialMoveSpeed;
         GravityAndJumpValues();
@@ -86,20 +77,9 @@ public class Player : MonoBehaviour
         //guiManager = FindObjectOfType<GuiManager>();
         controller = GetComponent<Controller2D>();
         //dialogueManager = FindObjectOfType<DialogueManager>();
-        //camera = FindObjectOfType<CameraFollowPlayer>();
-
-        // Animator
-        //anim = GetComponent<Animator>();
 
         // Find NPC's
         //FindNpcs();
-
-        // Find Checkpoints
-        //FindCheckpoints(checkpointContainer, "Checkpoint", checkpoints);
-        //playerCheckpoint = checkpointContainer.transform.GetChild(0).transform.position;
-
-        //Light
-        //playerLight.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -107,21 +87,11 @@ public class Player : MonoBehaviour
         // Synchronize all transform physics
         Physics2D.SyncTransforms();
 
-        //if (!GameState.IsPaused)
-        //{
-            // Player Movement
-            Movement();
-            //MovementStates();
+        // Player Movement
+        Movement();
+        PlayerDeathOnCollision();
 
-            //// Dialogue
-            //Dialogue();
-
-            //// Player Death
-            //DeathOnCollision();
-
-            ////Checkpoints
-            //SetNewPlayerCheckpoint(distanceToCheckpoint);
-        //}
+        // Dialogue
     }
 
     #region Movement
@@ -192,15 +162,15 @@ public class Player : MonoBehaviour
     {
         //if (!GameState.IsTalking)
         //{
-            CalculateVelocity();
-            HandleWallSliding();
+        CalculateVelocity();
+        HandleWallSliding();
 
-            controller.Move(velocity * Time.deltaTime, input);
+        controller.Move(velocity * Time.deltaTime, input);
 
-            if (controller.collisions.above || controller.collisions.below)
-            {
-                velocity.y = 0;
-            }
+        if (controller.collisions.above || controller.collisions.below)
+        {
+            velocity.y = 0;
+        }
         //}
     }
 
@@ -260,6 +230,16 @@ public class Player : MonoBehaviour
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
         velocity.y += gravity * Time.deltaTime;
     }
+
+    private void PlayerDeathOnCollision() 
+    {
+        if (controller.PlayerDeath)
+        {
+            transform.position = initialPosition;
+            controller.PlayerDeath = false;
+        }
+    }
+
     #endregion
 
     #region Animations and dialogue

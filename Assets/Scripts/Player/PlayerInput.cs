@@ -25,12 +25,12 @@ public class PlayerInput : MonoBehaviour
 
             player.SetDirectionalInput(directionalInput);
 
-            if (/*Input.GetButtonDown("Cross") ||*/ Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 player.OnJumpInputDown();
             }
 
-            if (/*Input.GetButtonUp("Cross") ||*/ Input.GetKeyUp(KeyCode.Space))
+            if (Input.GetKeyUp(KeyCode.Space))
             {
                 player.OnJumpInputUp();
             }
