@@ -56,16 +56,7 @@ public class Player : MonoBehaviour
         set { initialPosition = value; }
     }
 
-    //[Header("NPC Dialogue")]
-    ////public List<NPC> npcList = new List<NPC>();
-    //[SerializeField]
-    //private float distanceToNpc = 3;
-    //private float distance;
-
     Controller2D controller;
-    //GuiManager guiManager;
-
-    //DialogueManager dialogueManager;
 
     private void Start()
     {
@@ -89,9 +80,6 @@ public class Player : MonoBehaviour
 
         // Player Movement
         Movement();
-        PlayerDeathOnCollision();
-
-        // Dialogue
     }
 
     #region Movement
@@ -113,6 +101,12 @@ public class Player : MonoBehaviour
     {
         if (wallSliding)
         {
+            if ((directionalInput.x > 0 /*&& directionalInput.y >= 0f*/) && controller.collisions.left || (directionalInput.x < 0/* && directionalInput.y > 0f*/) && controller.collisions.right)
+            {
+                velocity.x = -wallDirX * wallLeap.x;
+                velocity.y = wallLeap.y;
+            }
+
             #region Unused Wall Jump
             //if (wallDirX == input.x)
             //{
@@ -129,19 +123,13 @@ public class Player : MonoBehaviour
             //    velocity.x = -wallDirX * wallLeap.x;
             //    velocity.y = wallLeap.y;
             //}
-            #endregion
 
             //if ((directionalInput.x > 0 && directionalInput.y >= 0f) && controller.collisions.left || (directionalInput.x < 0 && directionalInput.y > 0f) && controller.collisions.right)
             //{
             //    velocity.x = -wallDirX * wallLeap.x;
             //    velocity.y = wallLeap.y;
             //}
-
-            if ((directionalInput.x > 0 /*&& directionalInput.y >= 0f*/) && controller.collisions.left || (directionalInput.x < 0/* && directionalInput.y > 0f*/) && controller.collisions.right)
-            {
-                velocity.x = -wallDirX * wallLeap.x;
-                velocity.y = wallLeap.y;
-            }
+            #endregion
         }
 
         if (controller.collisions.below)
@@ -160,8 +148,6 @@ public class Player : MonoBehaviour
 
     private void Movement()
     {
-        //if (!GameState.IsTalking)
-        //{
         CalculateVelocity();
         HandleWallSliding();
 
@@ -171,7 +157,6 @@ public class Player : MonoBehaviour
         {
             velocity.y = 0;
         }
-        //}
     }
 
     //private void MovementStates()
@@ -231,7 +216,7 @@ public class Player : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
     }
 
-    private void PlayerDeathOnCollision() 
+    private void PlayerDeathOnCollision()
     {
         if (controller.PlayerDeath)
         {

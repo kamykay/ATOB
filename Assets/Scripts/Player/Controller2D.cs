@@ -148,12 +148,12 @@ public class Controller2D : RaycastController
 
             if (hit)
             {
-                if (hit.collider.tag == "Death")
+                if (hit.transform.CompareTag("Death"))
                 {
                     playerDeath = true;
                 }
 
-                if (hit.collider.tag == "Through")
+                if (hit.transform.CompareTag("Through"))
                 {
                     if (directionY == 1 || hit.distance == 0)
                     {
